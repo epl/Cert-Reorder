@@ -8,14 +8,13 @@ import sys
 import OpenSSL
 
 def buildParser():
-    parser = argparse.ArgumentParser(description='Manipulate the order of certificates in a pem style file')
-    parser.add_argument('file', type=argparse.FileType('r'), default='-', nargs="?")
-    action = parser.add_mutually_exclusive_group()
-    action.add_argument('-r', '--reverse', dest='action', action='store_const',
-                   const=reverse, default=interactive, help='Reverse the order of certificates.')
-    action.add_argument('-p', '--print', dest='action', action='store_const', const=print_cert_name, help="")
-    action.add_argument('-a', '--auto', dest='action', action='store_const', const=auto, help='')
-    return parser
+	parser = argparse.ArgumentParser(description='Manipulate the order of certificates in a pem style file')
+	parser.add_argument('file', type=argparse.FileType('r'), default='-', nargs="?")
+	action = parser.add_mutually_exclusive_group()
+	action.add_argument('-r', '--reverse', dest='action', action='store_const', const=reverse, default=interactive, help='Reverse the order of certificates.')
+	action.add_argument('-p', '--print', dest='action', action='store_const', const=print_cert_name, help="")
+	action.add_argument('-a', '--auto', dest='action', action='store_const', const=auto, help='')
+	return parser
 
 
 class CertParser:
@@ -50,16 +49,15 @@ class CertParser:
 
 	def get_common_name(self, cert):
 		return OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, cert).get_subject().commonName
-		
 
 def reverse(certs):
 	certs.reverse()
-	print asChain(certs)
+	print(asChain(certs))
 
 def print_cert_name(certs):
 	p = CertParser()
 	for cert in certs:
-		print p.get_common_name(cert)
+		print(p.get_common_name(cert))
 
 def asChain(certs):
 	return "\n".join(certs)
@@ -96,10 +94,10 @@ def auto(certs):
 			break
 		chain.insert(0, next)
 	chain = [c['text'] for c in chain ]
-	print asChain(chain)
+	print(asChain(chain))
 
 def interactive(certs):
-	print "Not yet implemented"
+	sys.stderr.write("Not yet implemented\n")
 
 if __name__ == '__main__':
 	args = buildParser().parse_args()
